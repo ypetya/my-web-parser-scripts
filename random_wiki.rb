@@ -21,7 +21,7 @@ File.open("#{DIR}/#{FILENAME}",'w') do |f|
   f.puts ""
   
   puts title
-  puts ""
+  puts "Cikk# - link : #{oldal.uri.to_s}"
 
   (oldal/"#bodyContent"/"p").each do |para|
     text = para.inner_text + ' '
