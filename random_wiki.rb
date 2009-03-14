@@ -5,6 +5,7 @@
 # This simple script gets random wikipedia page and starts espeak to read it
 
 require 'rubygems'
+require 'nokogiri'
 require 'mechanize'
 
 DIR = "/home/#{ENV['USER']}"
@@ -15,14 +16,16 @@ agent, agent.user_agent_alias, agent.redirect_ok = WWW::Mechanize.new, 'Linux Mo
 oldal = agent.get 'http://hu.wikipedia.org/wiki/Speci%C3%A1lis:Lap_tal%C3%A1lomra'
 
 File.open("#{DIR}/#{FILENAME}",'w') do |f|
-  f.puts oldal.title
+  title = oldal.title.gsub(/- Wiki.*/,'')
+  f.puts title
   f.puts ""
   
-  puts oldal.title
+  puts title
   puts ""
 
   (oldal/"#bodyContent"/"p").each do |para|
     text = para.inner_text + ' '
+    text = text.gsub(/Arra kérünk, szánj egy percet.*/,'')
     f << text
     puts text
   end
