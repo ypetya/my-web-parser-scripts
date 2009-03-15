@@ -12,8 +12,8 @@ DIR = "/home/#{ENV['USER']}"
 FILENAME = 'wikipedia.txt'
 SPEAK_COMMAND = 'espeak -p 78 -v hu -s 150 -a 99 -f'
 
-TABLAZAT_LIMIT = 400
-LISTA_LIMIT = 400
+TABLAZAT_LIMIT = 800
+LISTA_LIMIT = 800
 
 SANITIZE_THIS = ['Arra kérünk, szánj egy percet.*',
   '- Wiki.*','A Wikipédiából.*',
@@ -47,11 +47,11 @@ ROMAISZAMOK = {
 def sanitize text
   SANITIZE_THIS.each { |s|  text = text.gsub(/#{s}/,'') }
   #római számok kiegészítés
-  text = text.gsub(/(#{ROMAISZAMOK.keys.join('|')})\.\s*(\w+)/) do 
+  text = text.gsub(/\W*(#{ROMAISZAMOK.keys.join('|')})\.\W*(\w+)/) do 
     ROMAISZAMOK[$1] ? ( ROMAISZAMOK[$1] + ' ' + $2 ) : $&
   end
   #századok
-  text = text.gsub(/(\d{1,2})\.\s+század/) do
+  text = text.gsub(/\W*(\d{1,2})\.\W+század/) do
     ROMAISZAMOK.values[($1.to_i - 1)]+' század'
   end
   #idegesített
@@ -59,6 +59,7 @@ def sanitize text
     'iesbéen ' + $2.split('').join(' ')
   end
   text = text.gsub(/°/,' fok')
+  text = text.gsub(/[&]/,' és ')
   text = text.gsub(/²/,' négyzet')
   text = text.gsub(/\+\/\-/,' plussz minusz')
   text
