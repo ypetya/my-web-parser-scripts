@@ -93,7 +93,7 @@ def parse_node f, node
           to_say( f, 'TÁBLÁZAT: ' + node.inner_text + "\n")
         end
       end
-    elsif node.name =~ /^ul|ol$/
+    elsif node.name =~ /^(ul|ol)$/
       if node.inner_text.size > TABLAZAT_LIMIT
         to_say( f, "Túl nagy felsorolás. \n")
       else
