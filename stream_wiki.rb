@@ -54,14 +54,27 @@ def sanitize text
   text = text.gsub(/\W*(\d{1,2})\.\W+század/) do
     ROMAISZAMOK.values[($1.to_i - 1)]+' század'
   end
+
+  #törtek
+  text = text.gsub(/(\d)+[,.](\d)/) do
+    $1 + ' egész,' + $2
+  end
+
   #idegesített
   text = text.gsub(/(ISBN)\s*([0-9\-]+)$/) do
     'iesbéen ' + $2.split('').join(' ')
   end
+  text = text.gsub(/\Wkm\/h\W/,' km per óra')
+  text = text.gsub(/\WkW\W/,' kilo watt')
+  text = text.gsub(/\Wkg\W/,' kilo gramm')
+  text = text.gsub(/\d+\W+m\W/,' méter')
   text = text.gsub(/°/,' fok')
   text = text.gsub(/[&]/,' és ')
   text = text.gsub(/²/,' négyzet')
   text = text.gsub(/\+\/\-/,' plussz minusz')
+  text = text.gsub(/(\d)\s(0{2,})/) do
+    $1 + $2
+  end
   text
 end
 
