@@ -12,7 +12,7 @@ PAGE = ARGV.size > 0 ? ARGV[0] : nil
 DIR = "/home/#{ENV['USER']}"
 FILENAME = 'wikipedia.txt'
 
-SPEAK_COMMAND = ARGV.size > 1 ? "espeak -p 78 -v #{ARGV[1]} -s 150 -a 99 -f": 'espeak -p 78 -v hu -s 150 -a 99 -f'
+SPEAK_COMMAND = ARGV.size > 1 ? "aoss espeak -p 78 -v #{ARGV[1]} -s 150 -a 99 -f": 'aoss espeak -p 78 -v hu+f2 -s 150 -a 99 -f'
 
 TABLAZAT_LIMIT = 800
 LISTA_LIMIT = 800
@@ -146,7 +146,11 @@ while i > 0
     puts "Cikk##{i} - link : #{oldal.uri.to_s}"
     to_say( f, oldal.title )
     #parse_content
-    (oldal/"#bodyContent/*").each { |child| parse_node(f,child) }
+    wiki = false
+    (oldal/"#bodyContent/*").each { |child| wiki = true; parse_node(f,child) }
+
+    (oldal/"body/*").each { |child| parse_node(f,child) } unless wiki
+
     #footer
     f.puts "VÉGE."
   end
