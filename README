@@ -1,5 +1,11 @@
-
  * get_pics: Flicker picture downloader
  * pushapp: devportal status refresh
- * random_wiki: hungarian wikipedia random reader
- * refresh_est: est.hu daily program regresh to freeblog.hu
+ * random_wiki: hungarian wikipedia random reader(*1)
+ * refresh_est: est.hu daily program regresh to freeblog.hu(*1)
+
+== Requirements
+{{{
+gem install nokogiri
+gem install mechanize
+}}}
+(*1) Requires apt-get install espeak
