@@ -8,9 +8,11 @@ require 'rubygems'
 require 'nokogiri'
 require 'mechanize'
 
+PAGE = ARGV.size > 0 ? ARGV[0] : nil
 DIR = "/home/#{ENV['USER']}"
 FILENAME = 'wikipedia.txt'
-SPEAK_COMMAND = 'espeak -p 78 -v hu -s 150 -a 99 -f'
+
+SPEAK_COMMAND = ARGV.size > 1 ? "espeak -p 78 -v #{ARGV[1]} -s 150 -a 99 -f": 'espeak -p 78 -v hu -s 150 -a 99 -f'
 
 TABLAZAT_LIMIT = 800
 LISTA_LIMIT = 800
@@ -67,7 +69,7 @@ def sanitize text
   text = text.gsub(/\Wkm\/h\W/,' km per óra')
   text = text.gsub(/\WkW\W/,' kilo watt')
   text = text.gsub(/\Wkg\W/,' kilo gramm')
-  text = text.gsub(/\d+\W+m\W/,' méter')
+  #text = text.gsub(/\d+\W+m\W/,' méter')
   text = text.gsub(/°/,' fok')
   text = text.gsub(/[&]/,' és ')
   text = text.gsub(/²/,' négyzet')
@@ -84,8 +86,8 @@ def to_say f, text
   puts text
 end
 
-def parse_node f, node
-  
+def parse_node f, node, depth=0
+  return if depth > 30
   if node.is_a? Nokogiri::XML::Element
     if node.name =~ /^h.$/
       to_say( f, node.inner_text + "\n\n" )
@@ -118,7 +120,7 @@ def parse_node f, node
   end
 
   (node/"./*").each do |child|
-    parse_node(f, child)
+    parse_node(f, child, depth+1)
   end
 end
 
@@ -129,7 +131,11 @@ i = 1
 #infinite loop, and counter
 while i > 0
   #download random page
-  oldal = agent.get 'http://hu.wikipedia.org/wiki/Speci%C3%A1lis:Lap_tal%C3%A1lomra'
+  unless PAGE
+    oldal = agent.get 'http://hu.wikipedia.org/wiki/Speci%C3%A1lis:Lap_tal%C3%A1lomra'
+  else
+    oldal = agent.get PAGE
+  end
   #write to file and parse content
   File.open("#{DIR}/#{FILENAME}",'w') do |f|
     #Kategória
@@ -149,4 +155,5 @@ while i > 0
   #increment counter and garbage collect
   i = i+1
   ObjectSpace.garbage_collect
+  break if PAGE
 end
