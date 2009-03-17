@@ -53,7 +53,7 @@ def sanitize text
     ROMAISZAMOK[$1] ? ( ROMAISZAMOK[$1] + ' ' + $2 ) : $&
   end
   #századok
-  text = text.gsub(/\W*(\d{1,2})\.\W+század/) do
+  text = text.gsub(/\W*(#{(1..21).to_a.join('|')})\.\W+század/) do
     ROMAISZAMOK.values[($1.to_i - 1)]+' század'
   end
 
