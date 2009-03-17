@@ -129,10 +129,14 @@ agent, agent.user_agent_alias, agent.redirect_ok = WWW::Mechanize.new, 'Linux Mo
 
 i = 1
 #infinite loop, and counter
+links = []
 while i > 0
   #download random page
   unless PAGE
-    oldal = agent.get 'http://hu.wikipedia.org/wiki/Speci%C3%A1lis:Lap_tal%C3%A1lomra'
+    url = ['http://hu.wikipedia.org/wiki/Speci%C3%A1lis:Lap_tal%C3%A1lomra'] + links
+    url = url[rand(url.size)]
+    oldal = agent.get url
+    links = oldal.links.select{|l| l.href =~ /^\/wiki\/(?!(Wikip|Kateg|Speci|Kezd.*lap|F.*jl|Vita)).*/}.map{|l| l.href =~ /^http/ ? l.href : "http://hu.wikipedia.org#{l.href}" }
   else
     oldal = agent.get PAGE
   end
