@@ -13,5 +13,5 @@ File.open("#{DIR}/#{FILENAME}",'w') do |f|
   f.puts ARGV.join(' ')
 end
 
-system "aoss espeak -p 78 -v hu+f2 -s 150 -a 99 -f #{DIR}/#{FILENAME}"
+system "aoss espeak -p 78 -v hu+f2 -s 150 -a 149 -f #{DIR}/#{FILENAME}"
 
