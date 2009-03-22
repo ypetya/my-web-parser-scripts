@@ -95,6 +95,10 @@ def sanitize text
   # négyzet - matekban változó után jön. :/, mértékegységeknél előtte, mértékegységeket ki kéne szedni tömbbe
   text = text.gsub(/²/){ ' négyzet ' }
   text = text.gsub(/\+\/\-/,'plussz minusz')
+
+  # deokosvagyok rövidítésekű
+  text = text.gsub(/\sstb\.\s/, ' satöbbi ')
+  text = text.gsub(/\sun\.\s/, ' úgy nevezett ')
   text
 end
 
@@ -145,14 +149,22 @@ end
 #make a new mechanize user agent
 agent, agent.user_agent_alias, agent.redirect_ok = WWW::Mechanize.new, 'Linux Mozilla', true
 
+RANDOM_PAGE_LINK = 'http://hu.wikipedia.org/wiki/Speci%C3%A1lis:Lap_tal%C3%A1lomra'
 i = 1
 #infinite loop, and counter
 links = []
+last_link = ''
+new_link = ''
 while i > 0
   #download random page
   unless PAGE
-    url = ['http://hu.wikipedia.org/wiki/Speci%C3%A1lis:Lap_tal%C3%A1lomra'] + links
-    url = url[rand(url.size)]
+    url = [RANDOM_PAGE_LINK] + links
+    # find a really new link
+    new_link = url[rand(url.size)] while new_link == last_link
+    
+    url = new_link.dup
+    last_link = new_link.dup unless new_link == RANDOM_PAGE_LINK
+    
     oldal = agent.get url
     links = oldal.links.select{|l| l.href =~ /^\/wiki\/(?!(Wikip|Kateg|Speci|Kezd.*lap|F.*jl|Vita)).*/}.map{|l| l.href =~ /^http/ ? l.href : "http://hu.wikipedia.org#{l.href}" }
   else
