@@ -50,7 +50,7 @@ end
 
 
 # do not try these urls
-NOT_VALID_URL = [ /local/, /http:\/\/\d/, /private/, /virgo/ ]
+NOT_VALID_URL = [ /local/, /http:\/\/\d/, /private/, /virgo/, /ypetya/, /admin/, /sandbox/, /szarka/ ]
 
 
 new_links.each do |link|
