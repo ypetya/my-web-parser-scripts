@@ -35,8 +35,8 @@ def push_to_freeblog email,password,message
   agent.submit(m.forms.first)
 
   puts 'freeblog -> OK'
-#rescue
-#  puts 'freeblog -> ERROR' 
+rescue
+  puts 'freeblog -> ERROR' 
 end
 
 # check for new links
