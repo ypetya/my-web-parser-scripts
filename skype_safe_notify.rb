@@ -20,6 +20,11 @@ File.open("#{DIR}/#{FILENAME}",'w') do |f|
 end
 
 
+def simple_format link
+
+  link
+end
+
 def push_to_freeblog email,password,message
   #return if message['text'] =~ /@|http/
   agent, agent.user_agent_alias, agent.redirect_ok = WWW::Mechanize.new, 'Linux Mozilla', true
@@ -50,7 +55,7 @@ end
 
 
 # do not try these urls
-NOT_VALID_URL = [ /local/, /http:\/\/\d/, /private/, /virgo/, /ypetya/, /admin/, /sandbox/, /szarka/, /netpincer/ ]
+NOT_VALID_URL = [ /local/, /http:\/\/\d/, /private/, /virgo/, /ypetya/, /admin/, /sandbox/, /szarka/, /netpincer/, /blackbox/ ]
 
 
 new_links.each do |link|
@@ -69,6 +74,6 @@ system "aoss espeak -p 78 -v hu+f2 -s 150 -a 99 -f #{DIR}/#{FILENAME}"
 
 # push link to blog
 new_links_html.each do |link|
-  push_to_freeblog @@settings[:freeblog].first,@@settings[:freeblog].last,link
+  push_to_freeblog @@settings[:freeblog].first,@@settings[:freeblog].last, simple_format(link)
 end
 
