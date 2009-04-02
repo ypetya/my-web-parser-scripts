@@ -10,13 +10,31 @@ require 'mechanize'
 
 DIR = "/home/#{ENV['USER']}"
 URL = ARGV[0]
-NOT_IN_TITLE = ARGV[1]
-NOTIFY_COMMAND = "notify-send -u critical \"#{URL} nem elérhető.\""
+NOT_IN_TITLE = ARGV.size > 1 ? ARGV[1] : 'dummy'
+NOTIFY_COMMAND = "notify-send -u critical \"#{URL} elérhető.\""
 
 agent, agent.user_agent_alias, agent.redirect_ok = WWW::Mechanize.new, 'Linux Mozilla', true
 
-while (agent.get(URL).title =~ /#{NOT_IN_TITLE}/)
+begin
+
+  while (agent.get(URL).title =~ /#{NOT_IN_TITLE}/)
+    sleep(10)
+  end
+
   system NOTIFY_COMMAND
-  sleep(10)
+
+rescue
+
+  vege = false
+
+  while not vege
+    begin
+      vege = agent.get(URL)
+      system NOTIFY_COMMAND
+    rescue
+    end
+    sleep(10)
+  end
+
 end
 
