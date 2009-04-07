@@ -19,10 +19,25 @@ File.open("#{DIR}/#{FILENAME}",'w') do |f|
   f.puts message 
 end
 
+EMBED_CODES= {
+
+  :vimeo => {:get_id => /http:\/\/vimeo\.com\/(.*)$/, 
+    :code =>'<object width="400" height="225"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=EMBEDCODE&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=EMBEDCODE&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="400" height="225"></embed></object>'},
+  :youtube => { :get_id => /http:\/\/www\.youtube\.com\/watch\?v=(.*)/, 
+    :code => '<object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/EMBEDCODE&hl=en&fs=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/EMBEDCODE&hl=en&fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>'},
+}
 
 def simple_format link
-
-  link
+  link_as_html = %{<a href="#{link}">#{link}</a>} 
+  EMBED_CODES.each do |k,v|
+    link.gsub(v[:get_id]) do
+      my_id = $1.dup
+      link = v[:code].dup.gsub(/EMBEDCODE/){  my_id }
+      link += '<br/>' + link_as_html
+      return link
+    end
+  end
+  link_as_html
 end
 
 def push_to_freeblog email,password,message
@@ -64,7 +79,7 @@ new_links.each do |link|
   oldal = agent.get( "http://#{BLOG_NAME}.freeblog.hu" )
   unless oldal.links.map{|l| l.href}.include? link
     if NOT_VALID_URL.map{|r| link =~ r}.select{|x|x}.empty?   
-      new_links_html << %{<a href="#{link}">#{link}</a>} 
+      new_links_html << link
     end
   end
 end
