@@ -35,7 +35,7 @@ def recognize_first_embed_video_code_at link
   oldal = agent.get(link)
   if oldal.is_a? WWW::Mechanize::Page
     if o = oldal/"embed"
-      return o.first.to_xhtml unless o.blank?
+      return o.first.to_xhtml unless o.empty?
     end
   end
   nil
