@@ -76,7 +76,7 @@ module SkypeNotify
     end
 
     def remove_tmp_file
-      File.delete(@tmp_file)
+      FileUtils.rm(@tmp_file)
     end
 
     def save_message_to_file
