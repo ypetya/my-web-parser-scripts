@@ -125,11 +125,12 @@ module SkypeNotify
     # TODO: not working, yet
     # find embed codes in foreign pages.
     def recognize_first_embed_video_code_at link
+      return nil
       agent, agent.user_agent_alias, agent.redirect_ok = WWW::Mechanize.new, 'Linux Mozilla', true
       oldal = agent.get(link)
       if oldal.is_a? WWW::Mechanize::Page
         if oldal = oldal/"embed"
-          return oldal.first.to_xhtml unless o.empty?
+          return oldal.first.to_xhtml unless oldal.empty?
         end
       end
       nil
@@ -147,9 +148,10 @@ module SkypeNotify
             my_id = $1.dup
             link = v[:code].dup.gsub(/EMBEDCODE/){  my_id }
             link += '<br/>' + link_as_html
-            return link_as_html
+            return link
           end
         end
+      #  embed_code = false
       end
       return (embed_code ? embed_code : '') + link_as_html
     end
