@@ -7,7 +7,7 @@
 
 @@SkypeNotify_NORUN= true
 
-require 'skype_safe_notify.rb'
+require File.join( File.dirname(__FILE__), 'skype_safe_notify.rb')
 
 r = SkypeNotify::Runner.new
 r.run :nosound => true
