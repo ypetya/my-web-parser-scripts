@@ -18,7 +18,6 @@
 
 # Required:
 # notify-send package on ubuntu 810
-NOTIFY_COMMAND = "notify-send -u critical \"#{URL} elérhető.\""
 
 # Required gems:
 require 'rubygems'
@@ -28,6 +27,7 @@ require 'mechanize'
 DIR = ENV['HOME'] || ENV['USERPROFILE'] || ENV['HOMEPATH']
 # url argument
 URL = ARGV[0]
+NOTIFY_COMMAND = "notify-send -u critical \"#{URL} elérhető.\""
 # optional command argument
 NOT_IN_TITLE = ARGV.size > 1 ? ARGV[1] : 'dummy'
 
