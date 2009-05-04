@@ -4,6 +4,7 @@
 #
 # This script gets daily night musical programs in budapest from est.hu
 # and posts it as a blog entry to:
+
 DIR = "/home/#{ENV['USER']}"
 BLOG_NAME = 'esticsuda'
 # blog, at .freeblog.hu
