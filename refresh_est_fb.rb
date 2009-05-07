@@ -4,14 +4,13 @@
 #
 # This script gets daily night musical programs in budapest from est.hu
 # and posts it as a blog entry to:
-
 DIR = "/home/#{ENV['USER']}"
 BLOG_NAME = 'esticsuda'
 # blog, at .freeblog.hu
 load '/etc/my_ruby_scripts/settings.rb'
 
 require 'rubygems'
-require 'hpricot'
+require 'nokogiri'
 require 'mechanize'
 require 'ostruct'
 require 'yaml'
@@ -235,12 +234,6 @@ end
 if TOLTES
   eredmeny = YAML.load_file "#{DIR}/est.hu.yaml"
 end
-
-#lebloggolás
-
-def create_est
-end
-
 
 push_to_freeblog @@settings[:freeblog].first,@@settings[:freeblog].last,eredmeny
 
