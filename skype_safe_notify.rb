@@ -49,9 +49,10 @@ module SkypeNotify
 
   class Runner
 
-    THINGS_TO_DO = [:generate_tmp_file_name, # => to avoid script injection
+    THINGS_TO_DO = [:join_args_to_message, # => create
+										:get_links_to_blog, # => collect links, and replaye url-s in message text for better audio experience
+										:generate_tmp_file_name, # => to avoid script injection
                     :save_message_to_file,
-                    :get_links_to_blog,
                     :call_speak_command,
                     :put_links_to_blog,
                     :remove_tmp_file
@@ -79,9 +80,11 @@ module SkypeNotify
       FileUtils.rm(@tmp_file)
     end
 
-    def save_message_to_file
+		def join_args_to_message
       @message= ARGV.join(' ')
+		end
 
+    def save_message_to_file
       File.open(@tmp_file,'w') do |f|
         f.puts @message
       end
@@ -91,8 +94,12 @@ module SkypeNotify
       @new_links = []
       @new_links_html = []
       # collect links
-      @message.gsub(Regexp.new(URI.regexp.source.sub(/^[^:]+:/, '(http|https):'), Regexp::EXTENDED, 'n')) do
-        @new_links << $&
+      @message = @message.gsub(Regexp.new(URI.regexp.source.sub(/^[^:]+:/, '(http|https):'), Regexp::EXTENDED, 'n')) do
+        detected_link = $&
+				@new_links << detected_link.dup
+				ret = ' link. '
+				detected_link.gsub(/\.([^.]{3,10})$/){ ret = ($1 + ' link. ') }
+				ret
       end
       # valid links: not posted yet. not in blacklist
 
