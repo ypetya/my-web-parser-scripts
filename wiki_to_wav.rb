@@ -16,13 +16,13 @@ require 'mechanize'
 
 PAGE = nil #ARGV.size > 0 ? ARGV[0] : nil
 # temporary file data
-DIR = "/home/#{ENV['USER']}"
+DIR = "/tmp"
 FILENAME = 'wikipedia.txt'
 
-#SPEAK_COMMAND = ARGV.size > 1 ? "aoss espeak -p 78 -v #{ARGV[1]} -s 150 -a 99 -f": 'aoss espeak -p 78 -v hu+f2 -s 150 -a 99 -f'
+#SPEAK_COMMAND = ARGV.size > 1 ? "espeak -p 78 -v #{ARGV[1]} -s 150 -a 99 -f": 'aoss espeak -p 78 -v hu+f2 -s 150 -a 99 -f'
 MAX_COUNTER = ARGV.size > 0 ? ARGV[0].to_i : 10
 
-SPEAK_COMMAND = 'aoss espeak -p 78 -v hu+f2 -s 150 -a 99 -w /tmp/wiki_wav/TMPFILENAME.wav -f'
+SPEAK_COMMAND = "espeak -p 78 -v hu+f2 -s 150 -a 99 -w /tmp/wiki_wav/TMPFILENAME.wav -f"
 
 
 TABLAZAT_LIMIT = 800
@@ -151,7 +151,7 @@ def parse_node f, node, depth=0
   end
 end
 
-load '/etc/my_ruby_scripts/settings.rb'
+#load '/etc/my_ruby_scripts/settings.rb'
 BLOG_NAME = 'csakacsuda'
 
 def push_to_freeblog email,password,message
@@ -192,7 +192,9 @@ def hunt_for_wiki_image_in links, agent
 end
 
 def generate_filename counter
-  SPEAK_COMMAND.gsub(/TMPFILENAME/){ counter }
+  SPEAK_COMMAND.gsub(/TMPFILENAME/) do
+		counter = counter.gsub(/[^a-zA-Z0-9]/){''}
+	end
 end
 
 #make a new mechanize user agent
@@ -221,8 +223,9 @@ while i > 0
     oldal = agent.get PAGE
   end
   #grab images :)
-  hunt_for_wiki_image_in oldal.links,agent
-  #write to file and parse content
+  #hunt_for_wiki_image_in oldal.links,agent
+  
+	#write to file and parse content
   File.open("#{DIR}/#{FILENAME}",'w') do |f|
     #Kategória
     if cat = (oldal/"#bodyContent/div#catlinks")
@@ -241,6 +244,8 @@ while i > 0
     f.puts "VÉGE."
   end
   #say
+  #puts generate_filename(oldal.title)
+	#gets
   system "#{generate_filename(oldal.title)} #{DIR}/#{FILENAME}"
   #increment counter and garbage collect
   i = i+1
