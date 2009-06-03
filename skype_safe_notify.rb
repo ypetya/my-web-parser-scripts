@@ -35,7 +35,7 @@ module SkypeNotify
   TMP_FILENAME = "skype_say_safe"
   BLOG_NAME = 'csakacsuda'
   # do not try these urls
-  NOT_VALID_URL = [ /local/, /http:\/\/\d/, /private/, /virgo/, /ypetya/, /admin/, /sandbox/, /szarka/, /netpincer/, /blackbox/, /svn/ ]
+  NOT_VALID_URL = [ /local/, /http:\/\/[0-9\.]+\//, /private/, /virgo/, /ypetya/, /admin/, /sandbox/, /szarka/, /netpincer/, /blackbox/, /svn/, /authkey=\w+&/i ]
 
   # hungarian feemale voice 2
   SPEAK_COMMAND = 'aoss espeak -p 78 -v hu+f2 -s 150 -a 99 -f'
