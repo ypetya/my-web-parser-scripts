@@ -15,9 +15,10 @@
 # How to use this:
 #
 # Setup skype Notifiers in advanced view to run this script
-# [absolute path]skype_safe_notify.rb %smessage
+# [absolute path]skype_safe_notify.rb %sskype %smessage
 #
 #
+# first word identifies the other contact we are makeing an own sound from this info :)
 
 #requirements
 require 'rubygems'
@@ -37,8 +38,6 @@ module SkypeNotify
   # do not try these urls
   NOT_VALID_URL = [ /local/, /http:\/\/[0-9\.]+\//, /private/, /virgo/, /ypetya/, /admin/, /sandbox/, /szarka/, /netpincer/, /blackbox/, /svn/, /authkey=\w+&/i ]
 
-  # hungarian feemale voice 2
-  SPEAK_COMMAND = 'aoss espeak -p 78 -v hu+f2 -s 150 -a 99 -f'
 
   EMBED_CODES= {
     :vimeo => {:get_id => /http:\/\/vimeo\.com\/(.*)$/,
@@ -49,7 +48,8 @@ module SkypeNotify
 
   class Runner
 
-    THINGS_TO_DO = [:join_args_to_message, # => create
+    THINGS_TO_DO = [:generate_voice,
+                    :join_args_to_message, # => create
 										:get_links_to_blog, # => collect links, and replaye url-s in message text for better audio experience
 										:generate_tmp_file_name, # => to avoid script injection
                     :save_message_to_file,
@@ -65,6 +65,19 @@ module SkypeNotify
     def run options = { }
       @options.merge! options
       THINGS_TO_DO.each{ |thing| send( thing ) }
+    end
+  
+    P = (1..6).map{|x| x * 20 }
+    V = ['hu+f1','hu+f2','hu+f3','hu+f4','hu+m1','hu+m2','hu+m3','hu+m4','hu+m5','hu+m6']
+    S = (1..4).map{|x| 40 + x * 50 }
+
+    def speak_command( p, v, s )
+      "aoss espeak -p #{p} -v #{v} -s #{s} -a 99 -f"
+    end
+
+    def generate_voice
+      uid = ARGV.shift.sum
+      @speak_command = speak_command( P[uid % P.length], V[uid % V.length], S[uid % S.length])
     end
 
     def generate_tmp_file_name
@@ -117,7 +130,7 @@ module SkypeNotify
 
     def call_speak_command
       return if @options[:nosound]
-      system "#{SPEAK_COMMAND} #{@tmp_file}" if SPEAK_COMMAND
+      system "#{@speak_command} #{@tmp_file}" if @speak_command
     end
 
     # push link to blog
