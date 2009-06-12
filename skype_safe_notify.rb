@@ -72,10 +72,11 @@ module SkypeNotify
     S = (1..4).map{|x| 40 + x * 50 }
 
     def speak_command( p, v, s )
-      "aoss espeak -p #{p} -v #{v} -s #{s} -a 99 -f"
+      "aoss espeak -p #{p} -v #{v} -s #{s} -a 199 -f"
     end
 
     def generate_voice
+      return if @options[:nosound]
       uid = ARGV.shift.sum
       @speak_command = speak_command( P[uid % P.length], V[uid % V.length], S[uid % S.length])
     end
