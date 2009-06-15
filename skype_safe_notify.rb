@@ -36,7 +36,7 @@ module SkypeNotify
   TMP_FILENAME = "skype_say_safe"
   BLOG_NAME = 'csakacsuda'
   # do not try these urls
-  NOT_VALID_URL = [ /local/, /http:\/\/[0-9\.]+\//, /private/, /virgo/, /ypetya/, /admin/, /sandbox/, /szarka/, /netpincer/, /blackbox/, /svn/, /authkey=\w+&/i ]
+  NOT_VALID_URL = [ /local/, /http:\/\/[0-9\.]+[\/:]/, /private/, /virgo/, /ypetya/, /admin/, /sandbox/, /szarka/, /netpincer/, /blackbox/, /svn/, /authkey=\w+&/i ]
 
 
   EMBED_CODES= {
