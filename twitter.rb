@@ -5,6 +5,8 @@
 # Requirements:
 #
 # $sudo apt-get install twitter
+require 'rubygems'
+require 'twitter'
 #
 # Other requirements:
 #
@@ -12,11 +14,8 @@
 # @@settings = { :key => [ 'user', 'pwd' ] }
 load '/etc/my_ruby_scripts/settings.rb'
 
-require 'rubygems'
-require 'twitter'
-
-client = Twitter::HTTPAuth.new( @@settings['twitter_y'].first, @@settings['twitter_y'].last, :ssl => true )
-base = Twitter::Base.new(c)
+client = Twitter::HTTPAuth.new( @@settings[:twitter_y].first, @@settings[:twitter_y].last, :ssl => true )
+base = Twitter::Base.new(client)
 base.update ARGV[0]
 
 puts 'Status updated => ok'
