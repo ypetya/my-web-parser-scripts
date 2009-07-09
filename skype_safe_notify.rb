@@ -70,7 +70,8 @@ module SkypeNotify
     end
 
     def create_status_file_for_wmii
-      msg = "#{ARGV[0]}:" + ARGV.join(' ')
+      my_args = ARGV.dup
+      msg = "#{my_args.shift}:" + my_args.join(' ')
       msg = msg.length > 40 ? msg[0..40] + '...' : msg
       File.open(WMII_STATUS_FILENAME,'w') do |f|
         f.puts msg
