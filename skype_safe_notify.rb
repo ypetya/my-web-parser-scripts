@@ -33,6 +33,7 @@ module SkypeNotify
 
   DIR = ENV['HOME'] || ENV['USERPROFILE'] || ENV['HOMEPATH']
 
+  WMII_STATUS_FILENAME = "wmii_skype_info.log"
   TMP_FILENAME = "skype_say_safe"
   BLOG_NAME = 'csakacsuda'
   # do not try these urls
@@ -48,7 +49,8 @@ module SkypeNotify
 
   class Runner
 
-    THINGS_TO_DO = [:generate_voice,
+    THINGS_TO_DO = [:create_status_file_for_wmii, # => save the first 40 chars of message
+                    :generate_voice,
                     :join_args_to_message, # => create
 										:get_links_to_blog, # => collect links, and replaye url-s in message text for better audio experience
 										:generate_tmp_file_name, # => to avoid script injection
@@ -65,6 +67,14 @@ module SkypeNotify
     def run options = { }
       @options.merge! options
       THINGS_TO_DO.each{ |thing| send( thing ) }
+    end
+
+    def create_status_file_for_wmii
+      msg = "#{ARGV[0]}:" + ARGV.join(' ')
+      msg = msg.length > 40 ? msg[0..40] + '...' : msg
+      File.open(WMII_STATUS_FILENAME,'w') do |f|
+        f.puts msg
+      end
     end
   
     P = (1..6).map{|x| x * 20 }
