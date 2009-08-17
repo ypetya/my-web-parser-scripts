@@ -4,7 +4,7 @@
 #
 # Requirements:
 #
-# $sudo apt-get install twitter
+# $sudo gem install twitter
 require 'rubygems'
 require 'twitter'
 #
