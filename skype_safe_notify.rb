@@ -71,9 +71,12 @@ module SkypeNotify
 
     def create_status_file_for_wmii
       my_args = ARGV.dup
-      msg = "#{my_args.shift}:" + my_args.join(' ')
+      msg = "#{my_args.shift} \"" + my_args.join(' ').gsub(/"/){'\"'}
       msg = msg.length > 40 ? msg[0..40] + '...' : msg
-      File.open(WMII_STATUS_FILENAME,'w') do |f|
+      msg += '"'
+      @short_mess = msg
+      @short_status = File.join(DIR,WMII_STATUS_FILENAME)
+      File.open(@short_status,'w') do |f|
         f.puts msg
       end
     end
@@ -93,7 +96,7 @@ module SkypeNotify
     end
 
     def generate_tmp_file_name
-      @tmp_file = "#{DIR}/#{TMP_FILENAME}"
+      @tmp_file = File.join(DIR,TMP_FILENAME)
       @copy = '1'
       while File.exists?("#{@tmp_file}.#{@copy}.txt")
         @copy.next!
@@ -142,7 +145,7 @@ module SkypeNotify
 
     def call_speak_command
       return if @options[:nosound]
-      system("notify-send $(cat #{WMII_STATUS_FILENAME})")
+      system "notify-send #{@short_mess}" if @short_status
       system "#{@speak_command} #{@tmp_file}" if @speak_command
     end
 
