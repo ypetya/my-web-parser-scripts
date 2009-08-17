@@ -141,6 +141,7 @@ module SkypeNotify
 
     def call_speak_command
       return if @options[:nosound]
+      system("notify-send $(cat #{WMII_STATUS_FILENAME})")
       system "#{@speak_command} #{@tmp_file}" if @speak_command
     end
 
