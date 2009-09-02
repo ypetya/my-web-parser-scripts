@@ -1,4 +1,4 @@
-#!/bin/env ruby
+#!/usr/bin/env ruby
 
 load '/etc/my_ruby_scripts/settings.rb'
 
@@ -30,7 +30,7 @@ def work_with login
 end
 
 def train_with login
-  select_link ( 'Army', login ) do army
+  select_link( 'Army', login ) do army
     select_link( 'Train', army) do train
       puts 'trained..' unless train == 'ERR'
     end
