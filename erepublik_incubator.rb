@@ -32,18 +32,26 @@ end
 
 def work_with login
   select_link( 'Company', login  ) do |company|
-    sleep 2
-    select_link( 'Work', company ) do |work|
-      puts 'worked..' unless work == 'ERR'
+    unless company == 'ERR'
+      sleep 2
+      select_link( 'Work', company ) do |work|
+        puts 'worked..' unless work == 'ERR'
+      end
+    else
+      puts 'company err'
     end
   end
 end
 
 def train_with login
   select_link( 'Army', login ) do |army|
-    sleep 2
-    select_link( 'Train', army) do |train|
-      puts 'trained..' unless train == 'ERR'
+    unless army == 'ERR'
+      sleep 2
+      select_link( 'Train', army) do |train|
+        puts 'trained..' unless train == 'ERR'
+      end
+    else
+      puts 'work err'
     end
   end
 end
