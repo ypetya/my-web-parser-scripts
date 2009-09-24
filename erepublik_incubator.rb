@@ -89,7 +89,7 @@ def fight_please_at page, times = 4
     puts 'Trying to fight...'
     sleep 2
     if page = fight_forms.first.submit()
-      return fight_please( page, times - 1 )
+      return fight_please_at( page, times - 1 )
     end
   end
 
