@@ -18,6 +18,7 @@ def login
       if f.citizen_name
         f.citizen_name, f.citizen_password = @@settings[:erep].first, @@settings[:erep].last
         return yield( f.submit )
+        return
       end
     rescue
     end
