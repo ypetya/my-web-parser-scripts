@@ -84,7 +84,7 @@ def get_war_battlefield_at wars_page
 end
 
 def fight_please_at page, times = 4
-  return true if times <= 0
+  return page if times <= 0
   fight_forms = page.forms.select{|f| f.name =~ /fight_form/}
   unless fight_forms.empty?
     puts 'Trying to fight...'
@@ -94,7 +94,7 @@ def fight_please_at page, times = 4
     end
   end
 
-  return false
+  return page
 end
 
 def heal_from battlefield
@@ -118,7 +118,7 @@ def train_at_battle_with login
  
           puts 'Found war'
 
-          fight_please_at my_battlefield 
+          my_battlefield = fight_please_at my_battlefield 
           heal_from my_battlefield
 
         else
