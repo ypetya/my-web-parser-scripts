@@ -17,10 +17,12 @@ def login
     begin
       if f.citizen_name
         f.citizen_name, f.citizen_password = @@settings[:erep].first, @@settings[:erep].last
-        return yield( f.submit )
+        yield( f.submit )
         return
       end
-    rescue
+    rescue Exception => e
+      puts e.message
+      return
     end
   end
   yield(l)
