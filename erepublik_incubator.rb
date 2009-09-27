@@ -90,8 +90,8 @@ def fight_please_at page, times = 4
   fight_forms = page.forms.select{|f| f.name =~ /fight_form/}
   unless fight_forms.empty?
     puts 'Trying to fight...'
-    sleep 2
     if page = fight_forms.first.submit()
+      sleep 2
       return fight_please_at( page, times - 1 )
     end
   end
