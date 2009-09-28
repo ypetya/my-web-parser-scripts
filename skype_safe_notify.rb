@@ -83,7 +83,7 @@ module SkypeNotify
   
     P = (1..6).map{|x| x * 20 }
     V = ['hu+f1','hu+f2','hu+f3','hu+f4','hu+m1','hu+m2','hu+m3','hu+m4','hu+m5','hu+m6']
-    S = (1..4).map{|x| 40 + x * 50 }
+    S = (1..7).map{|x| 50 + x * 20 }
 
     def speak_command( p, v, s )
       "aoss espeak -p #{p} -v #{v} -s #{s} -a 199 -f"
