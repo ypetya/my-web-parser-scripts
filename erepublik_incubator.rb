@@ -110,6 +110,14 @@ def heal_from battlefield
   end
 end
 
+def heal_at region
+  home = @@agent.get( "#{@@site}/en/region/#{region}")
+  unless home.forms.empty?
+    home.forms.first.submit()
+    puts 'ok now, healed...'
+  end
+end
+
 def train_at_battle_with login
   select_link( 'Army', login ) do |army|
     unless army == 'ERR'
@@ -121,8 +129,8 @@ def train_at_battle_with login
           puts 'Found war'
 
           my_battlefield = fight_please_at my_battlefield 
-          heal_from my_battlefield
-
+          #heal_from my_battlefield
+          heal_at 'Heilongjiang'
         else
           puts 'No war for me (at page 0) :-/'
         end
