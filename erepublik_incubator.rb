@@ -2,7 +2,7 @@
 
 load '/etc/my_ruby_scripts/settings.rb'
 
-%w{rubygems nokogiri mechanize}.each{|x| require(x)}
+%w{rubygems nokogiri mechanize twitter}.each{|x| require(x)}
 
 DIR = "/home/#{ENV['USER']}"
 
@@ -10,10 +10,18 @@ DIR = "/home/#{ENV['USER']}"
 
 @@site = "http://www.erepublik.com"
 
+def update_twitter status
+  client = Twitter::HTTPAuth.new( @@settings[:twitter_log].first, @@settings[:twitter_log].last, :ssl => true )
+  base = Twitter::Base.new(client)
+  base.update status
+end
+
 def login 
   l = @@agent.get( @@site )
 
-  if f = l.forms.first
+  if l.forms.empty?
+    puts 'No forms on page. Maybe logged in.'
+  elsif f = l.forms.first
     begin
       if f.citizen_name
         f.citizen_name, f.citizen_password = @@settings[:erep].first, @@settings[:erep].last
@@ -141,9 +149,34 @@ def train_at_battle_with login
   end
 end
 
+# this will log character stats to twitter
+def log_stats_with login
+  msg = 'Failed'
+  select_link( 'Profile', login ) do |profile|
+    unless profile == 'ERR'
+      msg = "W:#{profile.root.css('#wellnessvalue').inner_text};"
+      money = profile.root.css('.item')
+      msg += "G:#{money[0].inner_text.to_i};M:#{money[1].inner_text.to_i};"
+      # clear whitespaces
+      skills = profile.root.css('div.quarter p').inner_text.gsub(/[\n\t:\s]/,'')
+      # separating with semicolons
+      skills = skills.gsub(/([\d\.])([A-Z])/){"#{$1};#{$2}"}
+      # cut words :)
+      skills = skills.gsub(/([a-z]{3,})([\W\d])/){"#{$1[0..0]}:#{$2}"}
+      msg += ';' +skills
+    end
+  end
+  if msg.length < 160
+    update_twitter msg
+  else
+    update_twitter 'fail'
+  end
+end
+
 
 login do |l|
   work_with l
   train_with l
   train_at_battle_with l
+  log_stats_with l
 end
